@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #393939; background-color: #ffffff}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px 'Helvetica Neue'; color: #393939; background-color: #ffffff; min-height: 16.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="ru"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Image Fetcher&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Запрос изображений&lt;/h1&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;input type="number" id="page" placeholder="номер страницы"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;input type="number" id="limit" placeholder="лимит"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button id="fetchButton"&gt;запрос&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="message"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="images"&gt;&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const pageInput = document.getElementById('page');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const limitInput = document.getElementById('limit');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const messageDiv = document.getElementById('message');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const imagesDiv = document.getElementById('images');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const fetchButton = document.getElementById('fetchButton');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">const lastPage = localStorage.getItem('page');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const lastLimit = localStorage.getItem('limit');</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (lastPage &amp;&amp; lastLimit) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fetchImages(lastPage, lastLimit);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>fetchButton.onclick = () =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const page = parseInt(pageInput.value);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const limit = parseInt(limitInput.value);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>messageDiv.textContent = '';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>imagesDiv.innerHTML = '';</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if ((isNaN(page) || page &lt; 1 || page &gt; 10) &amp;&amp; (isNaN(limit) || limit &lt; 1 || limit &gt; 10)) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>messageDiv.textContent = 'Номер страницы и лимит вне диапазона от 1 до 10';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (isNaN(page) || page &lt; 1 || page &gt; 10) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>messageDiv.textContent = 'Номер страницы вне диапазона от 1 до 10';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}<span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (isNaN(limit) || limit &lt; 1 || limit &gt; 10) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>messageDiv.textContent = 'Лимит вне диапазона от 1 до 10';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">localStorage.setItem('page', page);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('limit', limit);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fetchImages(page, limit);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function fetchImages(page, limit) {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fetch(`https://picsum.photos/v2/list?page=${page}&amp;limit=${limit}`)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>.then(response =&gt; response.json())</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>.then(data =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>data.forEach(image =&gt; {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>const img = document.createElement('img');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>img.src = image.download_url;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>img.alt = image.author;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>img.style.width = '100px';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>imagesDiv.appendChild(img);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
